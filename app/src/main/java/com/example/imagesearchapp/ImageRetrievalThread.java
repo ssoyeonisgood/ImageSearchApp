@@ -54,7 +54,7 @@ public class ImageRetrievalThread extends Thread {
                 } catch (Exception e) {
                 }
 
-                imageList.add(imageViewModel.setImage(image));
+//                imageList.add(imageViewModel.setImage(image));
             }
         }
     }
