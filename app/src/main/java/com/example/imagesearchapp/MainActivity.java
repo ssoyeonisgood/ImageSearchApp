@@ -12,16 +12,23 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    RecyclerView recyclerView;
+    ImageRVAdapter adapter;
+    RecyclerView.LayoutManager layoutManager;
     SearchResponseViewModel sViewModel;
     ImageViewModel imageViewModel;
     ErrorViewModel errorViewModel;
     Button loadImage;
-    ImageView picture;
     ProgressBar progressBar;
     EditText searchKey;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +38,24 @@ public class MainActivity extends AppCompatActivity {
         imageViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.NewInstanceFactory()).get(ImageViewModel.class);
         errorViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.NewInstanceFactory()).get(ErrorViewModel.class);
 
+        recyclerView = findViewById(R.id.imageRV);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ImageRVAdapter(imageViewModel.getImageList());
+        recyclerView.setAdapter(adapter);
+
         loadImage = findViewById(R.id.loadImage);
-        picture = findViewById(R.id.picureId);
         progressBar = findViewById(R.id.progressBarId);
         searchKey = findViewById(R.id.inputSearch);
 
-        picture.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
 
         loadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                picture.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.INVISIBLE);
                 String searchValues = searchKey.getText().toString();
                 APISearchThread searchThread = new APISearchThread(searchValues,MainActivity.this,sViewModel);
                 progressBar.setVisibility(View.VISIBLE);
@@ -62,12 +75,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        imageViewModel.image.observe(this, new Observer<Bitmap>() {
+
+        imageViewModel.imageListLiveData.observe(this, new Observer<List<Bitmap>>() {
             @Override
-            public void onChanged(Bitmap bitmap) {
+            public void onChanged(List<Bitmap> ImageList) {
                 progressBar.setVisibility(View.INVISIBLE);
-                picture.setVisibility(View.VISIBLE);
-                picture.setImageBitmap(imageViewModel.getImage());
+                recyclerView.setVisibility(View.VISIBLE);
+                adapter.notifyDataSetChanged();
             }
         });
         errorViewModel.errorCode.observe(this, new Observer<Integer>() {
