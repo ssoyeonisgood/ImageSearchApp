@@ -47,6 +47,7 @@ public class ImageRetrievalThread extends Thread {
             });
         }
         else {
+            imageViewModel.clearImageList();
             for (int i = 0; i < endpoint.size(); i++){
                 Bitmap image = getImageFromUrl(endpoint.get(i));
                 imageViewModel.addImage(image);
@@ -73,11 +74,14 @@ public class ImageRetrievalThread extends Thread {
                     }
                 }
                 if (jHits.length() < 15) {
-                    for (int i = 0; i > jHits.length(); i++) {
+                    for (int i = 0; i < jHits.length(); i++) {
                         JSONObject jHitsItem = jHits.getJSONObject(i);
                         imageUrls.add(jHitsItem.getString("previewURL"));
                     }
                 }
+            }
+            else {
+                imageUrls = null;
             }
         } catch (JSONException e) {
             e.printStackTrace();

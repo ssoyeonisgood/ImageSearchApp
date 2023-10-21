@@ -24,4 +24,9 @@ public class ImageViewModel  extends ViewModel {
         this.imageList.add(bitmap);
         this.imageListLiveData.postValue(this.imageList);
     }
+
+    public void clearImageList() {
+        this.imageList.clear();
+        this.imageListLiveData.postValue(imageList);
+    }
 }
