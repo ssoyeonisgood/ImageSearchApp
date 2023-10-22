@@ -9,10 +9,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -26,6 +24,7 @@ import java.util.UUID;
 public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHolder> {
 
     List<Bitmap> imageList;
+    ViewType viewType;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -36,15 +35,24 @@ public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHold
         }
     }
 
-    public ImageRVAdapter(List<Bitmap> imageList) {
+    public ImageRVAdapter(List<Bitmap> imageList, ViewType viewType) {
         this.imageList = imageList;
+        this.viewType = viewType;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.cardview, parent, false);
+        View view = null;
+        switch (this.viewType){
+            case OneColumn:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview, parent, false);
+                break;
+            case TwoColumns:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_two_column, parent, false);
+                break;
+        }
+
         return new ViewHolder(view);
     }
 
