@@ -24,7 +24,7 @@ import java.util.UUID;
 public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHolder> {
 
     List<Bitmap> imageList;
-    ViewType viewType;
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -35,23 +35,16 @@ public class ImageRVAdapter extends RecyclerView.Adapter<ImageRVAdapter.ViewHold
         }
     }
 
-    public ImageRVAdapter(List<Bitmap> imageList, ViewType viewType) {
+    public ImageRVAdapter(List<Bitmap> imageList) {
         this.imageList = imageList;
-        this.viewType = viewType;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = null;
-        switch (this.viewType){
-            case OneColumn:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview, parent, false);
-                break;
-            case TwoColumns:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_two_column, parent, false);
-                break;
-        }
+
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.cardview, parent, false);
 
         return new ViewHolder(view);
     }
